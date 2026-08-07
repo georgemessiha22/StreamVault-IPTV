@@ -83,3 +83,6 @@ tools/smoke_*.ps1
 final_narrow_*.log
 gradle_*_test*.log
 gradle_*_rerun.log
+
+# Git worktrees
+.worktrees/
