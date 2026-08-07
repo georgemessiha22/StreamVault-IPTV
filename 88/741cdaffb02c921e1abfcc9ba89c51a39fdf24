@@ -1,0 +1,37 @@
+docs/CHANGELOG.md
+  s_228646404f3abd::t_b3b5eb3d1c24bd 13-18
+app/src/main/java/com/streamvault/app/ui/screens/settings/SettingsViewModel.kt
+  s_32c029b8085f2c::t_a7e154b7137a52 1159
+app/src/main/java/com/streamvault/app/ui/screens/provider/ProviderSetupScreen.kt
+  s_32c029b8085f2c::t_822806066fe3cd 3045
+app/src/main/java/com/streamvault/app/ui/screens/settings/SettingsScreenState.kt
+  s_32c029b8085f2c::t_4c86df8d9599a1 60
+domain/src/main/java/com/streamvault/domain/manager/ProviderCredentials.kt
+  s_32c029b8085f2c::t_fd1c91749a38fa 1-10
+app/src/main/java/com/streamvault/app/ui/screens/settings/SettingsScreen.kt
+  s_32c029b8085f2c::t_6a52f5b833ab92 78
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.15",
+  "base_commit_sha": "88741cdaffb02c921e1abfcc9ba89c51a39fdf24",
+  "prompts": {},
+  "sessions": {
+    "s_228646404f3abd": {
+      "agent_id": {
+        "tool": "opencode",
+        "id": "ses_0255a76f6ffeyL4fyBxS8jVzsZ",
+        "model": "claude-opus-4.8"
+      },
+      "human_author": "George Messiha <georgemessiha22@gmail.com>"
+    },
+    "s_32c029b8085f2c": {
+      "agent_id": {
+        "tool": "opencode",
+        "id": "ses_024856026ffer0Zo07KVmo7qkw",
+        "model": "claude-opus-4.8"
+      },
+      "human_author": "George Messiha <georgemessiha22@gmail.com>"
+    }
+  }
+}
