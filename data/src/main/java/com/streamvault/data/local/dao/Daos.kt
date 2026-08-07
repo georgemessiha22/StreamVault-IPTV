@@ -2618,6 +2618,15 @@ interface SeriesDao {
     )
     suspend fun getIdMappingsByCategory(providerId: Long, categoryId: Long): List<SeriesRemoteIdMapping>
 
+    @Query(
+        """
+        SELECT id, series_id AS remote_id
+        FROM series
+        WHERE provider_id = :providerId AND series_id > 0
+        """
+    )
+    suspend fun getSeriesIdMappings(providerId: Long): List<RemoteIdMapping>
+
     @Query("SELECT COUNT(*) FROM series WHERE provider_id = :providerId")
     suspend fun countByProvider(providerId: Long): Int
 
@@ -2633,10 +2642,15 @@ interface SeriesDao {
     @Transaction
     suspend fun replaceAll(providerId: Long, series: List<SeriesEntity>) {
         val existingByRemoteId = getIdMappings(providerId).associate { it.remoteId to it.id }
+        val existingBySeriesId = getSeriesIdMappings(providerId).associate { it.remoteId to it.id }
         fun SeriesEntity.remoteKey(): String = providerSeriesId?.takeIf { it.isNotBlank() } ?: seriesId.toString()
         val remapped = series
             .distinctBy { it.remoteKey() }
-            .map { entity -> entity.copy(id = existingByRemoteId[entity.remoteKey()] ?: 0L) }
+            .map { entity ->
+                entity.copy(
+                    id = resolveExistingSeriesId(entity.remoteKey(), entity.seriesId, existingByRemoteId, existingBySeriesId)
+                )
+            }
         deleteByProvider(providerId)
         insertAll(remapped)
     }
@@ -2654,10 +2668,15 @@ interface SeriesDao {
     @Transaction
     suspend fun replaceCategory(providerId: Long, categoryId: Long, series: List<SeriesEntity>) {
         val existingByRemoteId = getIdMappingsByCategory(providerId, categoryId).associate { it.remoteId to it.id }
+        val existingBySeriesId = getSeriesIdMappings(providerId).associate { it.remoteId to it.id }
         fun SeriesEntity.remoteKey(): String = providerSeriesId?.takeIf { it.isNotBlank() } ?: seriesId.toString()
         val remapped = series
             .distinctBy { it.remoteKey() }
-            .map { entity -> entity.copy(id = existingByRemoteId[entity.remoteKey()] ?: 0L) }
+            .map { entity ->
+                entity.copy(
+                    id = resolveExistingSeriesId(entity.remoteKey(), entity.seriesId, existingByRemoteId, existingBySeriesId)
+                )
+            }
 
         if (remapped.isEmpty()) {
             deleteByProviderAndCategory(providerId, categoryId)
@@ -2671,10 +2690,15 @@ interface SeriesDao {
     suspend fun upsertCategoryPage(providerId: Long, series: List<SeriesEntity>) {
         if (series.isEmpty()) return
         val existingByRemoteId = getIdMappings(providerId).associate { it.remoteId to it.id }
+        val existingBySeriesId = getSeriesIdMappings(providerId).associate { it.remoteId to it.id }
         fun SeriesEntity.remoteKey(): String = providerSeriesId?.takeIf { it.isNotBlank() } ?: seriesId.toString()
         val remapped = series
             .distinctBy { it.remoteKey() }
-            .map { entity -> entity.copy(id = existingByRemoteId[entity.remoteKey()] ?: 0L) }
+            .map { entity ->
+                entity.copy(
+                    id = resolveExistingSeriesId(entity.remoteKey(), entity.seriesId, existingByRemoteId, existingBySeriesId)
+                )
+            }
         insertAll(remapped)
     }
 
