@@ -2,6 +2,12 @@
 
 All notable product changes are recorded in this document.
 
+## [1.1.18] - 2026-08-07
+
+### Changed
+
+- Re-based releasing and in-app auto-update onto the `georgemessiha22/StreamVault-IPTV` fork, so update checks, downloads, and the Settings GitHub link now point at the fork's releases and repository.
+
 ## [1.0.16] - 2026-06-19
 
 ### Added
