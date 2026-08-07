@@ -1,0 +1,19 @@
+.gitignore
+  s_228646404f3abd::t_f6c012c7ba579f 86-88
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.15",
+  "base_commit_sha": "4a3433ffa8c6a7fd317be3045711563ea645e38a",
+  "prompts": {},
+  "sessions": {
+    "s_228646404f3abd": {
+      "agent_id": {
+        "tool": "opencode",
+        "id": "ses_0255a76f6ffeyL4fyBxS8jVzsZ",
+        "model": "claude-opus-4.8"
+      },
+      "human_author": "George Messiha <georgemessiha22@gmail.com>"
+    }
+  }
+}
