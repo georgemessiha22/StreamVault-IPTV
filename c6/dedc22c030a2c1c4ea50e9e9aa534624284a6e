@@ -1,0 +1,79 @@
+app/src/main/res/values-pl/strings.xml
+  s_228646404f3abd::t_cddfc0e869dcb0 413
+app/src/main/res/values-es/strings.xml
+  s_228646404f3abd::t_cddfc0e869dcb0 414
+app/src/main/res/values-zh/strings.xml
+  s_228646404f3abd::t_cddfc0e869dcb0 413
+app/src/main/res/values-ja/strings.xml
+  s_228646404f3abd::t_cddfc0e869dcb0 413
+app/src/main/res/values-da/strings.xml
+  s_228646404f3abd::t_cddfc0e869dcb0 413
+README.md
+  s_228646404f3abd::t_99b6b9b19f176c 4-6,9,22,26-27,31-35,39,165
+app/src/main/res/values-vi/strings.xml
+  s_228646404f3abd::t_cddfc0e869dcb0 413
+app/src/main/java/com/streamvault/app/update/GitHubReleaseChecker.kt
+  s_228646404f3abd::t_36f0bde623d7f2 17-18
+docs/CHANGELOG.md
+  s_228646404f3abd::t_319e0621a9ce0b 5-10
+app/src/main/res/values-nb/strings.xml
+  s_228646404f3abd::t_cddfc0e869dcb0 413
+app/src/main/res/values-ko/strings.xml
+  s_228646404f3abd::t_cddfc0e869dcb0 413
+app/src/main/res/values-fi/strings.xml
+  s_228646404f3abd::t_cddfc0e869dcb0 413
+app/src/main/res/values-ru/strings.xml
+  s_228646404f3abd::t_cddfc0e869dcb0 413
+app/src/main/res/values-it/strings.xml
+  s_228646404f3abd::t_cddfc0e869dcb0 413
+app/src/main/res/values-fr/strings.xml
+  s_228646404f3abd::t_cddfc0e869dcb0 427
+app/src/main/res/values-sv/strings.xml
+  s_228646404f3abd::t_cddfc0e869dcb0 413
+app/src/main/res/values-ro/strings.xml
+  s_228646404f3abd::t_cddfc0e869dcb0 413
+app/src/main/res/values-tr/strings.xml
+  s_228646404f3abd::t_cddfc0e869dcb0 413
+app/src/main/res/values-hu/strings.xml
+  s_228646404f3abd::t_cddfc0e869dcb0 413
+app/src/main/res/values-el/strings.xml
+  s_228646404f3abd::t_cddfc0e869dcb0 413
+app/src/main/res/values-in/strings.xml
+  s_228646404f3abd::t_cddfc0e869dcb0 413
+app/src/main/res/values-iw/strings.xml
+  s_228646404f3abd::t_cddfc0e869dcb0 413
+app/src/main/res/values-nl/strings.xml
+  s_228646404f3abd::t_cddfc0e869dcb0 413
+app/src/main/res/values/strings.xml
+  s_228646404f3abd::t_cddfc0e869dcb0 638
+app/src/main/res/values-pt/strings.xml
+  s_228646404f3abd::t_cddfc0e869dcb0 413
+app/src/main/res/values-uk/strings.xml
+  s_228646404f3abd::t_cddfc0e869dcb0 413
+app/src/main/res/values-cs/strings.xml
+  s_228646404f3abd::t_cddfc0e869dcb0 413
+app/src/main/res/values-ar/strings.xml
+  s_228646404f3abd::t_cddfc0e869dcb0 413
+app/build.gradle.kts
+  s_228646404f3abd::t_ec77a4e2f76f77 60-61
+app/src/main/res/values-de/strings.xml
+  s_228646404f3abd::t_cddfc0e869dcb0 413
+docs/GOOGLE_DRIVE_SETUP.md
+  s_228646404f3abd::t_19c530ec64b65e 23
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.15",
+  "base_commit_sha": "c6dedc22c030a2c1c4ea50e9e9aa534624284a6e",
+  "prompts": {},
+  "sessions": {
+    "s_228646404f3abd": {
+      "agent_id": {
+        "tool": "opencode",
+        "id": "ses_0255a76f6ffeyL4fyBxS8jVzsZ",
+        "model": "claude-opus-4.8"
+      },
+      "human_author": "George Messiha <georgemessiha22@gmail.com>"
+    }
+  }
+}
