@@ -51,6 +51,7 @@ __pycache__/
 
 # Local scratch outputs
 .worktrees/
+*.log
 capture.txt
 out.txt
 localization_audit.txt
