@@ -50,6 +50,7 @@ __pycache__/
 *.pyc
 
 # Local scratch outputs
+*.log
 capture.txt
 out.txt
 localization_audit.txt
