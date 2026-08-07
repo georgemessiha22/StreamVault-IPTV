@@ -1,0 +1,28 @@
+data/src/main/java/com/streamvault/data/repository/SeriesRepositoryImpl.kt
+  s_228646404f3abd::t_e6cac35e8ddd0d 390-397
+docs/CHANGELOG.md
+  s_228646404f3abd::t_5a4223bd87930b 11-14
+data/src/test/java/com/streamvault/data/repository/SeriesRepositoryImplTest.kt
+  s_228646404f3abd::t_5062a7f6796908 228-244,258
+  s_228646404f3abd::t_a2051c652cf9c7 296-309
+  s_228646404f3abd::t_697d3b33429596 204-227,245-257,259-260
+  s_228646404f3abd::t_da11c03074ec4e 181-194
+  s_228646404f3abd::t_d3ad5203319bd5 349-362
+  s_228646404f3abd::t_8a428df50060e3 203
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.15",
+  "base_commit_sha": "db07e987cb5b9bb8c43b750fbc8b3ce79a0637f1",
+  "prompts": {},
+  "sessions": {
+    "s_228646404f3abd": {
+      "agent_id": {
+        "tool": "opencode",
+        "id": "ses_0255a76f6ffeyL4fyBxS8jVzsZ",
+        "model": "claude-opus-4.8"
+      },
+      "human_author": "George Messiha <georgemessiha22@gmail.com>"
+    }
+  }
+}
