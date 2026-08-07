@@ -1,0 +1,27 @@
+data/src/test/java/com/streamvault/data/local/dao/SeriesIdRemapTest.kt
+  s_228646404f3abd::t_dee23ea13c1dca 1-57
+data/src/main/java/com/streamvault/data/local/dao/SeriesIdRemap.kt
+  s_228646404f3abd::t_9af3b5f72a1d97 1-28
+data/src/androidTest/java/com/streamvault/data/local/SeriesEpisodeIdStabilityTest.kt
+  s_228646404f3abd::t_7ee87d9c110ea6 1-95
+data/src/main/java/com/streamvault/data/local/dao/Daos.kt
+  s_228646404f3abd::t_23c075019f4201 2671,2675-2679,2693,2697-2701
+  s_228646404f3abd::t_993bbee8143b2d 2621-2629
+  s_228646404f3abd::t_52b5b669211927 2645,2649-2653
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.15",
+  "base_commit_sha": "299c0621f0a8d4f7bcbfda16840e8276d9d3c689",
+  "prompts": {},
+  "sessions": {
+    "s_228646404f3abd": {
+      "agent_id": {
+        "tool": "opencode",
+        "id": "ses_0255a76f6ffeyL4fyBxS8jVzsZ",
+        "model": "claude-opus-4.8"
+      },
+      "human_author": "George Messiha <georgemessiha22@gmail.com>"
+    }
+  }
+}
