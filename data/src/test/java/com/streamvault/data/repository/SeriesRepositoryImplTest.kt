@@ -178,13 +178,84 @@ class SeriesRepositoryImplTest {
                 status = ProviderStatus.ACTIVE
             )
         )
-        whenever(episodeDao.getBySeriesSync(99L)).thenReturn(emptyList())
+        whenever(episodeDao.getBySeriesSync(99L)).thenReturn(
+            listOf(
+                EpisodeBrowseEntity(
+                    id = 1L,
+                    episodeId = 7001L,
+                    title = "Pilot",
+                    episodeNumber = 1,
+                    seasonNumber = 1,
+                    streamUrl = "internal://episode/7001",
+                    seriesId = 99L,
+                    providerId = 7L
+                )
+            )
+        )
 
         val result = createRepository().getSeriesDetails(7L, 99L)
 
         assertThat(result.getOrNull()?.name).isEqualTo("Cached Series")
         verify(xtreamApiService, never()).getSeriesInfo(any(), any())
         verify(xtreamContentIndexDao, never()).markDetailHydrated(any(), any(), any(), any(), anyOrNull(), any())
+    }
+
+    @Test
+    fun `getSeriesDetails re-hydrates fresh xtream cache when persisted episodes are missing`() = runTest {
+        whenever(preferencesRepository.xtreamBase64TextCompatibility).thenReturn(flowOf(false))
+        val hydratedAt = System.currentTimeMillis()
+        val seriesEntity = SeriesEntity(
+            id = 99L,
+            seriesId = 301L,
+            name = "Cached Series",
+            providerId = 7L,
+            cacheState = "DETAIL_HYDRATED",
+            detailHydratedAt = hydratedAt
+        )
+        whenever(seriesDao.getById(99L)).thenReturn(seriesEntity)
+        whenever(providerDao.getById(7L)).thenReturn(
+            ProviderEntity(
+                id = 7L,
+                name = "Xtream",
+                type = ProviderType.XTREAM_CODES,
+                serverUrl = "http://example.com",
+                username = "user",
+                password = "pass",
+                status = ProviderStatus.ACTIVE
+            )
+        )
+        // Episodes were orphaned + purged by daily maintenance, so the "fresh" hydrated
+        // series row initially reports zero persisted episodes (first read). After the
+        // self-heal re-fetch persists them, the second read returns them.
+        whenever(episodeDao.getBySeriesSync(99L)).thenReturn(
+            emptyList(),
+            listOf(
+                EpisodeBrowseEntity(
+                    id = 1L,
+                    episodeId = 7001L,
+                    title = "Pilot",
+                    episodeNumber = 1,
+                    seasonNumber = 1,
+                    streamUrl = "internal://episode/7001",
+                    seriesId = 99L,
+                    providerId = 7L
+                )
+            )
+        )
+        whenever(xtreamApiService.getSeriesInfo(any(), any())).thenReturn(
+            XtreamSeriesInfoResponse(
+                info = XtreamSeriesItem(name = "Cached Series"),
+                seasons = listOf(XtreamSeason(seasonNumber = 1, name = "Season 1", episodeCount = 1))
+            )
+        )
+
+        val result = createRepository().getSeriesDetails(7L, 99L)
+
+        // Self-heal: a hydrated series with no episodes must re-fetch from the provider
+        // instead of returning empty seasons.
+        verify(xtreamApiService).getSeriesInfo(any(), any())
+        val series = (result as com.streamvault.domain.model.Result.Success).data
+        assertThat(series.seasons.flatMap { it.episodes }.map { it.title }).containsExactly("Pilot")
     }
 
     @Test
@@ -222,7 +293,20 @@ class SeriesRepositoryImplTest {
                 status = ProviderStatus.ACTIVE
             )
         )
-        whenever(episodeDao.getBySeriesSync(99L)).thenReturn(emptyList())
+        whenever(episodeDao.getBySeriesSync(99L)).thenReturn(
+            listOf(
+                EpisodeBrowseEntity(
+                    id = 1L,
+                    episodeId = 7001L,
+                    title = "Pilot",
+                    episodeNumber = 1,
+                    seasonNumber = 1,
+                    streamUrl = "internal://episode/7001",
+                    seriesId = 99L,
+                    providerId = 7L
+                )
+            )
+        )
 
         val result = createRepository(
             duplicateHandlingMode = VodDuplicateHandlingMode.SMART,
@@ -262,7 +346,20 @@ class SeriesRepositoryImplTest {
                 status = ProviderStatus.ACTIVE
             )
         )
-        whenever(episodeDao.getBySeriesSync(99L)).thenReturn(emptyList())
+        whenever(episodeDao.getBySeriesSync(99L)).thenReturn(
+            listOf(
+                EpisodeBrowseEntity(
+                    id = 1L,
+                    episodeId = 7001L,
+                    title = "Pilot",
+                    episodeNumber = 1,
+                    seasonNumber = 1,
+                    streamUrl = "internal://episode/7001",
+                    seriesId = 99L,
+                    providerId = 7L
+                )
+            )
+        )
 
         val knownPresentation = SeriesDetailPresentationHint(
             providerId = 7L,

@@ -387,7 +387,14 @@ class SeriesRepositoryImpl @Inject constructor(
         }
 
         if (provider.type == ProviderType.XTREAM_CODES && seriesEntity.hasFreshXtreamDetails()) {
-            return Result.success(attachSeriesPresentation(buildSeriesWithPersistedEpisodes(seriesEntity), knownPresentation))
+            val cachedSeries = buildSeriesWithPersistedEpisodes(seriesEntity)
+            if (cachedSeries.seasons.isNotEmpty()) {
+                return Result.success(attachSeriesPresentation(cachedSeries, knownPresentation))
+            }
+            // A hydrated series with zero persisted episodes means the episodes were lost
+            // after hydration (e.g. the series row's local id changed, orphaning its
+            // episodes, which daily maintenance then purged). Do not serve an empty season
+            // list from the "fresh" cache; fall through to re-hydrate from the provider.
         }
 
         val remoteResult = try {
