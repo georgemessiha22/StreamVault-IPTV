@@ -10,7 +10,12 @@ All notable product changes are recorded in this document.
 
 ### Fixed
 
-- Fixed series details sometimes showing only the poster and description with no seasons or episodes (most visible when reopening a series from Continue Watching). A hydrated series whose episodes had been lost — for example when a summary re-sync changed the series' local row id and left the old episodes orphaned for daily maintenance to purge — was treated as a valid "fresh" cache and served empty seasons for up to the detail refresh window. Series details now re-fetch episodes from the provider whenever a cached series has zero persisted episodes, so the seasons and episodes list self-heals on the next open.
+- Fixed series details sometimes showing only the poster and description with no seasons or episodes (most visible when reopening a series from Continue Watching). A hydrated series whose episodes had been lost — for example when a summary re-sync changed the series' local row id and left the old episodes orphaned for daily maintenance to purge — was treated as a valid "fresh" cache and served empty seasons for up to the detail refresh window. Series details now re-fetch episodes from the provider whenever a cached series has zero persisted episodes, so the seasons and episodes list self-heals on the next open. Summary re-syncs also keep a series' local id stable across provider id-format changes so its episodes are no longer orphaned.
+
+### Removed
+
+- Removed Google Drive backup/restore and Google account sign-in (the `play-services-auth` dependency). Configuration export and import are now local files only. Google Cast is unaffected.
+- Removed the "official Play Store build" verification badge and its signing-certificate checks, since this fork is distributed as a sideloaded APK.
 
 ## [1.0.16] - 2026-06-19
 

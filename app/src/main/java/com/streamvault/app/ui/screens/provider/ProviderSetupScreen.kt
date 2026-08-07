@@ -241,10 +241,6 @@ fun ProviderSetupScreen(
         contract = ActivityResultContracts.OpenDocument()
     ) { uri: android.net.Uri? -> uri?.let { viewModel.inspectBackup(it.toString()) } }
 
-    val driveSignInLauncher = rememberLauncherForActivityResult(
-        contract = ActivityResultContracts.StartActivityForResult()
-    ) { result -> viewModel.completeDriveSignIn(result.data) }
-
     // ?? Effects ???????????????????????????????????????????????????????????????
     LaunchedEffect(knownLocalM3uUrls) {
         cleanupOldImportedM3uFilesAsync(context.filesDir, knownLocalM3uUrls, 20)
@@ -629,19 +625,10 @@ fun ProviderSetupScreen(
     if (showImportOptionsDialog) {
         ImportOptionsDialog(
             isImportingBackup = uiState.isImportingBackup || uiState.syncProgress != null,
-            driveSignedIn = uiState.driveSignedIn,
             onDismiss = { showImportOptionsDialog = false },
             onImportBackup = {
                 showImportOptionsDialog = false
                 backupImportLauncher.launch(arrayOf("application/json"))
-            },
-            onImportFromDrive = {
-                showImportOptionsDialog = false
-                viewModel.importBackupFromDrive()
-            },
-            onDriveSignIn = {
-                showImportOptionsDialog = false
-                viewModel.beginDriveSignIn(driveSignInLauncher)
             }
         )
     }
@@ -3054,11 +3041,8 @@ private fun ImportOptionsButton(
 @Composable
 private fun ImportOptionsDialog(
     isImportingBackup: Boolean,
-    driveSignedIn: Boolean,
     onDismiss: () -> Unit,
-    onImportBackup: () -> Unit,
-    onImportFromDrive: () -> Unit,
-    onDriveSignIn: () -> Unit
+    onImportBackup: () -> Unit
 ) {
     PremiumDialog(
         title = stringResource(R.string.settings_backup_restore),
@@ -3078,19 +3062,6 @@ private fun ImportOptionsDialog(
                     isLoading = isImportingBackup,
                     onClick = onImportBackup
                 )
-                if (driveSignedIn) {
-                    ImportDialogActionButton(
-                        text = stringResource(R.string.settings_drive_pull),
-                        isLoading = isImportingBackup,
-                        onClick = onImportFromDrive
-                    )
-                } else {
-                    ImportDialogActionButton(
-                        text = stringResource(R.string.settings_drive_signin),
-                        isLoading = false,
-                        onClick = onDriveSignIn
-                    )
-                }
             }
         },
         footer = {

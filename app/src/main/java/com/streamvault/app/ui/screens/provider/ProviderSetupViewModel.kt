@@ -11,9 +11,6 @@ import com.streamvault.data.remote.xtream.XtreamRequestException
 import com.streamvault.data.remote.xtream.XtreamResponseTooLargeException
 import com.streamvault.data.security.CredentialDecryptionException
 import com.streamvault.domain.manager.BackupConflictStrategy
-import com.streamvault.domain.manager.DriveAuthState
-import com.streamvault.domain.manager.DriveBackupSyncManager
-import com.streamvault.domain.manager.ProviderCredentials
 import com.streamvault.domain.model.Result as DomainResult
 import com.streamvault.domain.manager.BackupImportPlan
 import com.streamvault.domain.manager.BackupPreview
@@ -61,7 +58,6 @@ class ProviderSetupViewModel @Inject constructor(
     private val combinedM3uRepository: CombinedM3uRepository,
     private val validateAndAddProvider: ValidateAndAddProvider,
     private val importBackup: ImportBackup,
-    private val driveBackupSyncManager: DriveBackupSyncManager,
     private val providerQrPairingManager: ProviderQrPairingManager,
 ) : ViewModel() {
 
@@ -102,30 +98,6 @@ class ProviderSetupViewModel @Inject constructor(
                     .toSet()
             }
         }
-        viewModelScope.launch {
-            driveBackupSyncManager.authState.collect { state ->
-                _uiState.update {
-                    it.copy(driveSignedIn = state is DriveAuthState.SignedIn)
-                }
-            }
-        }
-    }
-
-    fun beginDriveSignIn(launcher: androidx.activity.result.ActivityResultLauncher<android.content.Intent>) {
-        viewModelScope.launch {
-            when (val request = driveBackupSyncManager.beginSignIn()) {
-                is DomainResult.Success -> {
-                    val intent = request.data.intent as? android.content.Intent ?: return@launch
-                    runCatching { launcher.launch(intent) }
-                }
-                is DomainResult.Error -> {
-                    _uiState.update {
-                        it.copy(error = "Drive sign-in unavailable: ${request.message}")
-                    }
-                }
-                is DomainResult.Loading -> Unit
-            }
-        }
     }
 
     fun startPhonePairing() {
@@ -138,69 +110,6 @@ class ProviderSetupViewModel @Inject constructor(
         viewModelScope.launch {
             providerQrPairingManager.stopPairing()
         }
-    }
-
-    fun completeDriveSignIn(intentData: android.content.Intent?) {
-        viewModelScope.launch {
-            when (val signIn = driveBackupSyncManager.completeSignIn(intentData)) {
-                is DomainResult.Success -> Unit
-                is DomainResult.Error -> {
-                    _uiState.update {
-                        it.copy(error = "Drive sign-in failed: ${signIn.message}")
-                    }
-                }
-                is DomainResult.Loading -> Unit
-            }
-        }
-    }
-
-    fun importBackupFromDrive() {
-        viewModelScope.launch {
-            _uiState.update {
-                it.copy(
-                    isImportingBackup = true,
-                    syncProgress = "Downloading from Drive...",
-                    validationError = null,
-                    error = null
-                )
-            }
-            when (val pullResult = driveBackupSyncManager.pullBackup()) {
-                is DomainResult.Success -> {
-                    // Best-effort companion fetch (M3). Failures are non-fatal.
-                    val credentials = (driveBackupSyncManager.pullCredentials() as? DomainResult.Success)?.data
-                    _uiState.update {
-                        it.copy(
-                            isImportingBackup = false,
-                            pendingDriveCredentials = credentials,
-                        )
-                    }
-                    inspectBackup(pullResult.data.localUriString)
-                }
-                is DomainResult.Error -> {
-                    _uiState.update {
-                        it.copy(
-                            isImportingBackup = false,
-                            syncProgress = null,
-                            error = "Drive pull failed: ${pullResult.message}"
-                        )
-                    }
-                }
-                is DomainResult.Loading -> Unit
-            }
-        }
-    }
-
-    private suspend fun applyPendingDriveCredentials() {
-        val pending = _uiState.value.pendingDriveCredentials.orEmpty()
-        if (pending.isEmpty()) return
-        pending.forEach { cred ->
-            providerRepository.updateProviderPassword(
-                serverUrl = cred.serverUrl,
-                username = cred.username,
-                cleartextPassword = cred.password,
-            )
-        }
-        _uiState.update { it.copy(pendingDriveCredentials = null) }
     }
 
     fun loadProvider(id: Long) {
@@ -839,9 +748,6 @@ class ProviderSetupViewModel @Inject constructor(
         val plan = capturedPlan ?: return
         viewModelScope.launch {
             val result = importBackup.confirm(ImportBackupCommand(uriString, plan))
-            if (result is ImportBackupResult.Success) {
-                applyPendingDriveCredentials()
-            }
             val hasProviders = if (result is ImportBackupResult.Success) {
                 providerRepository.getProviders().first().isNotEmpty()
             } else {
@@ -1093,8 +999,6 @@ data class ProviderSetupState(
     val backupPreview: BackupPreview? = null,
     val pendingBackupUri: String? = null,
     val backupImportPlan: BackupImportPlan = BackupImportPlan(),
-    val pendingDriveCredentials: List<ProviderCredentials>? = null,
-    val driveSignedIn: Boolean = false,
     val epgSyncMode: ProviderEpgSyncMode = ProviderEpgSyncMode.BACKGROUND,
     val xtreamLiveSyncMode: ProviderXtreamLiveSyncMode = ProviderXtreamLiveSyncMode.AUTO,
     val guideSourcePolicy: GuideSourcePolicy = GuideSourcePolicy.AUTO,

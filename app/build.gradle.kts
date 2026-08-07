@@ -1,7 +1,5 @@
 import java.util.Properties
 import java.io.FileInputStream
-import java.security.KeyStore
-import java.security.MessageDigest
 
 plugins {
     alias(libs.plugins.android.application)
@@ -27,28 +25,6 @@ if (localPropertiesFile.exists()) {
 
 fun localProp(key: String): String = localProperties.getProperty(key, "")
 
-fun computeOfficialSigningCertSha256(): String {
-    if (!keystorePropertiesFile.exists()) return ""
-
-    val storePath = keystoreProperties.getProperty("storeFile") ?: return ""
-    val storePassword = keystoreProperties.getProperty("storePassword") ?: return ""
-    val keyAlias = keystoreProperties.getProperty("keyAlias") ?: return ""
-    val storeFile = rootProject.file(storePath)
-    if (!storeFile.exists()) return ""
-
-    val keyStore = KeyStore.getInstance("JKS")
-    storeFile.inputStream().use { input ->
-        keyStore.load(input, storePassword.toCharArray())
-    }
-
-    val certificate = keyStore.getCertificate(keyAlias) ?: return ""
-    return MessageDigest.getInstance("SHA-256")
-        .digest(certificate.encoded)
-        .joinToString(":") { byte -> "%02X".format(byte) }
-}
-
-val officialSigningCertSha256 = computeOfficialSigningCertSha256()
-
 android {
     namespace = "com.streamvault.app"
     compileSdk = 36
@@ -60,8 +36,6 @@ android {
         versionCode = 18
         versionName = "1.1.18"
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
-        buildConfigField("String", "OFFICIAL_APPLICATION_ID", "\"com.streamvault.app\"")
-        buildConfigField("String", "OFFICIAL_SIGNING_CERT_SHA256", "\"$officialSigningCertSha256\"")
         buildConfigField("String", "APP_UPDATE_CHANNEL", "\"stable\"")
         buildConfigField("long", "BUILD_TIMESTAMP_UTC", "0L")
         ndk {

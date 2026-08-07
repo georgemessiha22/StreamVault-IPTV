@@ -32,10 +32,6 @@ internal fun SettingsContentPane(
     onShareCrashReport: () -> Unit,
     onDeleteCrashReport: () -> Unit,
     onRestoreBackup: () -> Unit,
-    onDriveSignIn: () -> Unit,
-    onDriveSignOut: () -> Unit,
-    onDrivePush: () -> Unit,
-    onDrivePull: () -> Unit,
     onOpenUri: (String) -> Unit,
     modifier: Modifier = Modifier
 ) {
@@ -174,13 +170,6 @@ internal fun SettingsContentPane(
                 onCreateBackupUsb = onCreateBackupUsb,
                 onRestoreBackupUsb = onRestoreBackupUsb
             )
-            settingsDriveBackupSection(
-                uiState = uiState,
-                onSignIn = onDriveSignIn,
-                onSignOut = onDriveSignOut,
-                onPush = onDrivePush,
-                onPull = onDrivePull
-            )
         } else if (dialogState.selectedCategory == 6) {
             epgSourcesSection(
                 uiState = uiState,
@@ -190,7 +179,6 @@ internal fun SettingsContentPane(
             settingsAboutSection(
                 uiState = uiState,
                 context = context,
-                buildVerificationLabel = screenLabels.buildVerificationLabel,
                 onOpenUri = onOpenUri,
                 onCheckForUpdates = viewModel::checkForAppUpdates,
                 onInstallDownloadedUpdate = viewModel::installDownloadedUpdate,

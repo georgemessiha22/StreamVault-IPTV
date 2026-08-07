@@ -13,8 +13,6 @@ import com.streamvault.domain.repository.CombinedM3uRepository
 import com.streamvault.domain.repository.ProviderRepository
 import com.streamvault.domain.manager.BackupImportPlan
 import com.streamvault.domain.manager.BackupImportResult
-import com.streamvault.domain.manager.DriveAuthState
-import com.streamvault.domain.manager.DriveBackupSyncManager
 import com.streamvault.domain.usecase.ImportBackup
 import com.streamvault.domain.usecase.ImportBackupResult
 import com.streamvault.domain.usecase.ValidateAndAddProvider
@@ -44,7 +42,6 @@ class ProviderSetupViewModelTest {
     private val combinedM3uRepository: CombinedM3uRepository = mock()
     private val validateAndAddProvider: ValidateAndAddProvider = mock()
     private val importBackup: ImportBackup = mock()
-    private val driveBackupSyncManager: DriveBackupSyncManager = mock()
     private val providerQrPairingManager: ProviderQrPairingManager = mock()
     private val testDispatcher = StandardTestDispatcher()
 
@@ -54,7 +51,6 @@ class ProviderSetupViewModelTest {
         whenever(providerRepository.getActiveProvider()).thenReturn(flowOf(null))
         whenever(providerRepository.getProviders()).thenReturn(flowOf(emptyList()))
         whenever(combinedM3uRepository.getActiveLiveSource()).thenReturn(flowOf(null))
-        whenever(driveBackupSyncManager.authState).thenReturn(flowOf(DriveAuthState.SignedOut))
         whenever(providerQrPairingManager.state).thenReturn(MutableStateFlow(ProviderQrPairingState()))
     }
 
@@ -87,7 +83,6 @@ class ProviderSetupViewModelTest {
             combinedM3uRepository = combinedM3uRepository,
             validateAndAddProvider = validateAndAddProvider,
             importBackup = importBackup,
-            driveBackupSyncManager = driveBackupSyncManager,
             providerQrPairingManager = providerQrPairingManager,
         )
 
@@ -122,7 +117,6 @@ class ProviderSetupViewModelTest {
             combinedM3uRepository = combinedM3uRepository,
             validateAndAddProvider = validateAndAddProvider,
             importBackup = importBackup,
-            driveBackupSyncManager = driveBackupSyncManager,
             providerQrPairingManager = providerQrPairingManager,
         )
 
@@ -155,7 +149,6 @@ class ProviderSetupViewModelTest {
             combinedM3uRepository = combinedM3uRepository,
             validateAndAddProvider = validateAndAddProvider,
             importBackup = importBackup,
-            driveBackupSyncManager = driveBackupSyncManager,
             providerQrPairingManager = providerQrPairingManager,
         )
         val field = ProviderSetupViewModel::class.java.getDeclaredField("_uiState").apply { isAccessible = true }
@@ -182,7 +175,6 @@ class ProviderSetupViewModelTest {
             combinedM3uRepository = combinedM3uRepository,
             validateAndAddProvider = validateAndAddProvider,
             importBackup = importBackup,
-            driveBackupSyncManager = driveBackupSyncManager,
             providerQrPairingManager = providerQrPairingManager,
         )
 
@@ -234,7 +226,6 @@ class ProviderSetupViewModelTest {
             combinedM3uRepository = combinedM3uRepository,
             validateAndAddProvider = validateAndAddProvider,
             importBackup = importBackup,
-            driveBackupSyncManager = driveBackupSyncManager,
             providerQrPairingManager = providerQrPairingManager,
         )
 
@@ -256,7 +247,6 @@ class ProviderSetupViewModelTest {
             combinedM3uRepository = combinedM3uRepository,
             validateAndAddProvider = validateAndAddProvider,
             importBackup = importBackup,
-            driveBackupSyncManager = driveBackupSyncManager,
             providerQrPairingManager = providerQrPairingManager,
         )
 
@@ -274,7 +264,6 @@ class ProviderSetupViewModelTest {
             combinedM3uRepository = combinedM3uRepository,
             validateAndAddProvider = validateAndAddProvider,
             importBackup = importBackup,
-            driveBackupSyncManager = driveBackupSyncManager,
             providerQrPairingManager = providerQrPairingManager,
         )
 
@@ -292,7 +281,6 @@ class ProviderSetupViewModelTest {
             combinedM3uRepository = combinedM3uRepository,
             validateAndAddProvider = validateAndAddProvider,
             importBackup = importBackup,
-            driveBackupSyncManager = driveBackupSyncManager,
             providerQrPairingManager = providerQrPairingManager,
         )
 
@@ -310,7 +298,6 @@ class ProviderSetupViewModelTest {
             combinedM3uRepository = combinedM3uRepository,
             validateAndAddProvider = validateAndAddProvider,
             importBackup = importBackup,
-            driveBackupSyncManager = driveBackupSyncManager,
             providerQrPairingManager = providerQrPairingManager,
         )
 
@@ -343,7 +330,6 @@ class ProviderSetupViewModelTest {
             combinedM3uRepository = combinedM3uRepository,
             validateAndAddProvider = validateAndAddProvider,
             importBackup = importBackup,
-            driveBackupSyncManager = driveBackupSyncManager,
             providerQrPairingManager = providerQrPairingManager,
         )
 
@@ -376,7 +362,6 @@ class ProviderSetupViewModelTest {
             combinedM3uRepository = combinedM3uRepository,
             validateAndAddProvider = validateAndAddProvider,
             importBackup = importBackup,
-            driveBackupSyncManager = driveBackupSyncManager,
             providerQrPairingManager = providerQrPairingManager,
         )
 
@@ -401,7 +386,6 @@ class ProviderSetupViewModelTest {
             combinedM3uRepository = combinedM3uRepository,
             validateAndAddProvider = validateAndAddProvider,
             importBackup = importBackup,
-            driveBackupSyncManager = driveBackupSyncManager,
             providerQrPairingManager = providerQrPairingManager,
         )
 

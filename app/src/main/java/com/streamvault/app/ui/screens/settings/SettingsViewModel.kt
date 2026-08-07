@@ -1,8 +1,6 @@
 package com.streamvault.app.ui.screens.settings
 
 import android.app.Application
-import android.content.Intent
-import androidx.activity.result.ActivityResultLauncher
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.streamvault.app.R
@@ -28,7 +26,6 @@ import com.streamvault.domain.manager.BackupConflictStrategy
 import com.streamvault.domain.manager.BackupImportPlan
 import com.streamvault.domain.manager.BackupManager
 import com.streamvault.domain.manager.BackupPreview
-import com.streamvault.domain.manager.DriveBackupSyncManager
 import com.streamvault.domain.manager.ParentalControlManager
 import com.streamvault.domain.manager.RecordingManager
 import com.streamvault.domain.model.Category
@@ -108,7 +105,6 @@ class SettingsViewModel @Inject constructor(
     private val preferencesRepository: PreferencesRepository,
     private val internetSpeedTestRunner: InternetSpeedTestRunner,
     private val backupManager: BackupManager,
-    private val driveBackupSyncManager: DriveBackupSyncManager,
     private val recordingManager: RecordingManager,
     private val parentalControlManager: ParentalControlManager,
     private val syncManager: SyncManager,
@@ -149,12 +145,6 @@ class SettingsViewModel @Inject constructor(
     private val backupActions = SettingsBackupActions(
         exportBackup = exportBackup,
         importBackup = importBackup,
-        uiState = _uiState
-    )
-    private val driveBackupActions = SettingsDriveBackupActions(
-        driveManager = driveBackupSyncManager,
-        importBackup = importBackup,
-        providerRepository = providerRepository,
         uiState = _uiState
     )
     private val recordingActions = SettingsRecordingActions(
@@ -241,7 +231,6 @@ class SettingsViewModel @Inject constructor(
             preferencesRepository = preferencesRepository,
             uiState = _uiState
         )
-        driveBackupActions.observeAuthState(viewModelScope)
     }
 
     fun refreshCrashReport() {
@@ -1167,29 +1156,7 @@ class SettingsViewModel @Inject constructor(
     }
 
     fun confirmBackupImport() {
-        backupActions.confirmBackupImport(viewModelScope) {
-            driveBackupActions.applyPendingCredentials(viewModelScope)
-        }
-    }
-
-    fun beginDriveSignIn(launcher: ActivityResultLauncher<Intent>) {
-        driveBackupActions.beginSignIn(viewModelScope, launcher)
-    }
-
-    fun completeDriveSignIn(intentData: Intent?) {
-        driveBackupActions.completeSignIn(viewModelScope, intentData)
-    }
-
-    fun signOutDrive() {
-        driveBackupActions.signOut(viewModelScope)
-    }
-
-    fun pushToDrive() {
-        driveBackupActions.pushBackup(viewModelScope)
-    }
-
-    fun pullFromDrive() {
-        driveBackupActions.pullBackup(viewModelScope)
+        backupActions.confirmBackupImport(viewModelScope)
     }
 
     fun stopRecording(recordingId: String) {

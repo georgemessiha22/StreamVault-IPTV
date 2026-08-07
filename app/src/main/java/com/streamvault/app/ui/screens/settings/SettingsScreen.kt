@@ -31,7 +31,6 @@ import com.streamvault.app.device.isFireTvDevice
 import com.streamvault.app.device.removableAppStorageDirs
 import java.io.File
 import com.streamvault.app.diagnostics.CrashReportStore
-import com.streamvault.app.util.OfficialBuildVerifier
 import com.streamvault.app.ui.components.shell.AppTopBarCloseAction
 import com.streamvault.app.ui.components.shell.AppNavigationChrome
 import com.streamvault.app.ui.components.shell.AppScreenScaffold
@@ -74,11 +73,9 @@ fun SettingsScreen(
     val scope = rememberCoroutineScope()
     val context = androidx.compose.ui.platform.LocalContext.current
     val mainActivity = context.findMainActivity()
-    val officialBuildVerification = remember(context.packageName) { OfficialBuildVerifier.verify(context) }
     val screenLabels = rememberSettingsScreenLabels(
         uiState = uiState,
-        context = context,
-        officialBuildStatus = officialBuildVerification.status
+        context = context
     )
     val dialogState = rememberSettingsScreenDialogState()
     val providerState = rememberSettingsProviderSectionState(dialogState)
@@ -200,12 +197,6 @@ fun SettingsScreen(
         val uri = CrashReportStore.providerUriForFile(context, file)
         runCatching { context.startActivity(CrashReportStore.buildShareIntent(uri)) }
             .onFailure { viewModel.showUserMessage(context.getString(R.string.settings_crash_report_share_failed)) }
-    }
-
-    val driveSignInLauncher = rememberLauncherForActivityResult(
-        contract = ActivityResultContracts.StartActivityForResult()
-    ) { result ->
-        viewModel.completeDriveSignIn(result.data)
     }
 
     val recordingFolderLauncher = rememberLauncherForActivityResult(
@@ -369,10 +360,6 @@ fun SettingsScreen(
                             }
                         }
                     },
-                    onDriveSignIn = { viewModel.beginDriveSignIn(driveSignInLauncher) },
-                    onDriveSignOut = viewModel::signOutDrive,
-                    onDrivePush = viewModel::pushToDrive,
-                    onDrivePull = viewModel::pullFromDrive,
                     onOpenUri = uriHandler::openUri,
                     modifier = Modifier.weight(1f)
                 )
