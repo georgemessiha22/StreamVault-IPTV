@@ -1,0 +1,40 @@
+app/src/test/java/com/streamvault/app/ui/screens/settings/SettingsAppUpdateModelsTest.kt
+  s_228646404f3abd::t_73c4ec04089f41 97,99-100,102-143
+  s_228646404f3abd::t_1f258366117eb0 98
+  s_228646404f3abd::t_502898e62394bc 101
+app/src/main/java/com/streamvault/app/update/AppUpdateVersionPolicy.kt
+  s_228646404f3abd::t_ccdeae3684504e 145-153,162-163,168-169,174-178
+  s_228646404f3abd::t_1e589a0b979a7f 58-68,76-85
+  s_7e9ce696d4501d::t_fa67f09f0b07cf 86-87,179-180
+app/build.gradle.kts
+  s_228646404f3abd::t_987fb3dc693f26 28-34
+  s_228646404f3abd::t_ea9c05d658f1ee 88
+docs/CHANGELOG.md
+  s_228646404f3abd::t_1d6078c6d05650 15-16
+.github/workflows/beta.yml
+  s_228646404f3abd::t_eaa829f8122fef 79
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.15",
+  "base_commit_sha": "9f079dd00c6302055fae16ada38e66835d1cefe2",
+  "prompts": {},
+  "sessions": {
+    "s_228646404f3abd": {
+      "agent_id": {
+        "tool": "opencode",
+        "id": "ses_0255a76f6ffeyL4fyBxS8jVzsZ",
+        "model": "claude-opus-4.8"
+      },
+      "human_author": "George Messiha <georgemessiha22@gmail.com>"
+    },
+    "s_7e9ce696d4501d": {
+      "agent_id": {
+        "tool": "opencode",
+        "id": "ses_02a867b5bffe7tXo1csTRX4V8o",
+        "model": "claude-opus-4.8"
+      },
+      "human_author": "George Messiha <georgemessiha22@gmail.com>"
+    }
+  }
+}
