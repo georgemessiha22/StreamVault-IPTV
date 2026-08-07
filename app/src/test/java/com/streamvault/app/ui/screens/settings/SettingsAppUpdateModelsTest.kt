@@ -100,6 +100,53 @@ class SettingsAppUpdateModelsTest {
     }
 
     @Test
+    fun betaBuildDetectsNewerBetaSequenceForSameBaseVersion() {
+        val result = isRemoteVersionNewerForBuild(
+            remoteVersionCode = null,
+            remoteVersionName = "1.1.18-beta.000002.01",
+            remotePublishedAt = null,
+            currentVersionCode = 18,
+            currentVersionName = "1.1.18-beta.000001.01",
+            currentBuildTimestampUtc = 0L,
+            currentChannel = AppUpdateChannel.Beta
+        )
+
+        assertThat(result).isTrue()
+    }
+
+    @Test
+    fun betaBuildRejectsIdenticalBetaSequenceEvenWhenPublishedLater() {
+        // The installed beta must not flag its own release as an update just because
+        // the release was published a few minutes after the APK was built.
+        val result = isRemoteVersionNewerForBuild(
+            remoteVersionCode = null,
+            remoteVersionName = "1.1.18-beta.000002.01",
+            remotePublishedAt = "2999-01-01T00:00:00Z",
+            currentVersionCode = 18,
+            currentVersionName = "1.1.18-beta.000002.01",
+            currentBuildTimestampUtc = 0L,
+            currentChannel = AppUpdateChannel.Beta
+        )
+
+        assertThat(result).isFalse()
+    }
+
+    @Test
+    fun betaBuildRejectsOlderBetaSequenceForSameBaseVersion() {
+        val result = isRemoteVersionNewerForBuild(
+            remoteVersionCode = null,
+            remoteVersionName = "1.1.18-beta.000001.01",
+            remotePublishedAt = "2999-01-01T00:00:00Z",
+            currentVersionCode = 18,
+            currentVersionName = "1.1.18-beta.000002.01",
+            currentBuildTimestampUtc = 0L,
+            currentChannel = AppUpdateChannel.Beta
+        )
+
+        assertThat(result).isFalse()
+    }
+
+    @Test
     fun downloadedLatestShowsInstallAction() {
         val update = AppUpdateUiModel(
             latestVersionName = "1.0.12",

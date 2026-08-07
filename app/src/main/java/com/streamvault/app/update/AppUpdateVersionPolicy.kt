@@ -55,11 +55,34 @@ fun isRemoteVersionNewerForBuild(
     }
 
     if (currentChannel == AppUpdateChannel.Beta) {
+        // Prefer the explicit beta build sequence (e.g. "-beta.000002.01") when both
+        // the installed build and the remote release carry one. This lets a beta
+        // install detect the newest beta and, crucially, avoids flagging its own
+        // release as an update just because the release was published a few minutes
+        // after the APK was built.
+        val remoteSequence = remoteDescriptor.betaSequence
+        val currentSequence = parseAppVersionDescriptor(currentVersionName).betaSequence
+        if (remoteSequence != null && currentSequence != null) {
+            return compareIntListsStatic(remoteSequence, currentSequence) > 0
+        }
+
         val remotePublishedAtMillis = remotePublishedAt.toEpochMillisOrNull() ?: return false
         return remotePublishedAtMillis > currentBuildTimestampUtc
     }
 
     return false
+}
+
+private fun compareIntListsStatic(left: List<Int>, right: List<Int>): Int {
+    val length = max(left.size, right.size)
+    for (index in 0 until length) {
+        val leftValue = left.getOrNull(index) ?: 0
+        val rightValue = right.getOrNull(index) ?: 0
+        if (leftValue != rightValue) {
+            return leftValue.compareTo(rightValue)
+        }
+    }
+    return 0
 }
 
 fun compareVersionNamesStatic(left: String, right: String): Int {
@@ -119,7 +142,15 @@ fun latestAppUpdateAction(
 
 private data class ParsedAppVersionDescriptor(
     val baseVersionName: String,
-    val channel: AppUpdateChannel
+    val channel: AppUpdateChannel,
+    /**
+     * Numeric beta build sequence parsed from the part after `-beta` (e.g.
+     * "-beta.000002.01" -> [2, 1]). Null when there is no beta marker or the
+     * suffix is not a purely numeric dot-separated sequence (e.g. a git sha
+     * suffix like "-beta-deadbee"), in which case callers fall back to the
+     * publish-time comparison.
+     */
+    val betaSequence: List<Int>?
 )
 
 private fun parseAppVersionDescriptor(versionName: String): ParsedAppVersionDescriptor {
@@ -128,14 +159,23 @@ private fun parseAppVersionDescriptor(versionName: String): ParsedAppVersionDesc
     return if (betaIndex >= 0) {
         ParsedAppVersionDescriptor(
             baseVersionName = normalized.substring(0, betaIndex),
-            channel = AppUpdateChannel.Beta
+            channel = AppUpdateChannel.Beta,
+            betaSequence = parseBetaSequence(normalized.substring(betaIndex + "-beta".length))
         )
     } else {
         ParsedAppVersionDescriptor(
             baseVersionName = normalized,
-            channel = AppUpdateChannel.Stable
+            channel = AppUpdateChannel.Stable,
+            betaSequence = null
         )
     }
+}
+
+private fun parseBetaSequence(afterBetaMarker: String): List<Int>? {
+    val trimmed = afterBetaMarker.trim().trimStart('.', '-')
+    if (trimmed.isEmpty()) return null
+    val parts = trimmed.split('.')
+    return parts.map { part -> part.toIntOrNull() ?: return null }
 }
 
 private fun String?.toEpochMillisOrNull(): Long? {

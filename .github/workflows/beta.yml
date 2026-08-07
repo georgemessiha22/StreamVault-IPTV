@@ -76,7 +76,7 @@ jobs:
         run: chmod +x gradlew
 
       - name: Build beta APK
-        run: ./gradlew --console=plain :app:assembleBeta
+        run: ./gradlew --console=plain :app:assembleBeta -PbetaSequence=${{ steps.app_version.outputs.beta_sequence }}
 
       - name: Prepare beta artifact
         shell: bash

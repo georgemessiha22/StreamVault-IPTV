@@ -25,6 +25,13 @@ if (localPropertiesFile.exists()) {
 
 fun localProp(key: String): String = localProperties.getProperty(key, "")
 
+// Optional beta build sequence supplied by CI (beta.yml) via -PbetaSequence=NNNNNN.NN.
+// When present it is baked into the beta versionName (e.g. "1.1.18-beta.000002.01")
+// so the in-app updater can compare beta sequences and detect the latest beta.
+val betaSequence: String? = (project.findProperty("betaSequence") as String?)
+    ?.trim()
+    ?.takeIf { it.isNotEmpty() }
+
 android {
     namespace = "com.streamvault.app"
     compileSdk = 36
@@ -78,7 +85,7 @@ android {
         create("beta") {
             initWith(getByName("release"))
             applicationIdSuffix = ".beta"
-            versionNameSuffix = "-beta"
+            versionNameSuffix = if (betaSequence != null) "-beta.$betaSequence" else "-beta"
             buildConfigField("String", "APP_UPDATE_CHANNEL", "\"beta\"")
             buildConfigField("long", "BUILD_TIMESTAMP_UTC", "${System.currentTimeMillis()}L")
             isDebuggable = false
