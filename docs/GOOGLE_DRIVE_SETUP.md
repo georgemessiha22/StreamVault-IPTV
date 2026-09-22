@@ -20,7 +20,7 @@ That means:
 | Build flavour | Needs its own OAuth client | Why |
 |---|---|---|
 | `master` debug, local on dev machine | yes | each developer signs with their own debug keystore (different SHA-1) |
-| Official release on Play Store | yes | Davidona's release key SHA-1 |
+| Official release on Play Store | yes | georgemessiha22's release key SHA-1 |
 | CI build | yes (or share the dev one) | depending on signing strategy |
 
 The code in `data/manager/GoogleDriveBackupSyncManager.kt` never references an
